@@ -1,0 +1,114 @@
+{% extends "recipes/layout.html" %}
+
+{% block body %}
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    body {
+        background-color: #f8f8f9;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .recipe-card {
+        max-width: 800px;
+        margin: 30px auto;
+        padding: 20px;
+        border: none;
+        background-color: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 15px;
+    }
+
+    .recipe-card img {
+        width: 100%;
+        height: auto;
+        margin-bottom: 20px;
+        border-radius: 15px;
+    }
+
+    .center-content h1 {
+        font-size: 2rem;
+        margin-bottom: 15px;
+        color: #333;
+        font-weight: 600;
+    }
+
+    .recipe-card h3 {
+        color: #333;
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+        font-weight: 500;
+    }
+
+    .recipe-card p, .recipe-card li {
+        color: #4a4a4a;
+        font-size: 1rem;
+        margin-bottom: 10px;
+        line-height: 1.6;
+    }
+
+    .ingredients-list, .steps-list {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .recipe-card a {
+        color: #fff;
+        text-decoration: none;
+    }
+
+    .btn {
+        margin-top: 20px;
+        border-radius: 6px;
+        font-size: 0.9rem;
+    }
+
+    .btn-primary {
+        background-color: #007aff;
+        border: none;
+    }
+
+    .btn-danger {
+        background-color: #ff3b30;
+        border: none;
+    }
+</style>
+
+<div class="container">
+    <h2 class="text-center my-4">My Favourite Recipes</h2>
+
+    {% for recipe in favorite_recipes %}
+    <div class="recipe-card">
+        <div class="center-content">
+            <h1>{{ recipe.title }}</h1>
+            <img src="{{ recipe.image }}" alt="{{ recipe.title }}">
+        </div>
+
+        <h3>Description</h3>
+        <p>{{ recipe.description }}</p>
+
+        <h3>Cuisine</h3>
+        <p>{{ recipe.cuisine }}</p>
+
+        <h3>Total Time Taken</h3>
+        <p>{{ recipe.time }} mins</p>
+
+        <h3>Calories</h3>
+        <p>{{ recipe.calories }}</p>
+
+        <div class="d-flex justify-content-end">
+            <a href="{% url 'recipes:view_recipe' recipe.id %}" class="btn btn-primary">
+                View Recipe
+            </a>
+            <!-- <a href="{% url 'recipes:update_recipe' recipe.id %}" class="btn btn-primary ml-2">
+                Update Recipe
+            </a>
+            <a href="{% url 'recipes:delete_recipe' recipe.id %}" class="btn btn-danger ml-2">
+                Delete Recipe
+            </a> -->
+        </div>
+    </div>
+    {% empty %}
+    <p class="text-center">You have not added any recipes yet.</p>
+    {% endfor %}
+</div>
+{% endblock %}

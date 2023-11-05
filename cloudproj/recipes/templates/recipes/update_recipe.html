@@ -1,0 +1,90 @@
+{% extends "recipes/layout.html" %}
+
+{% block body %}
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            function createInput(value, placeholder) {
+                return $('<div class="input-group mb-3"><input type="text" class="form-control" placeholder="' + placeholder + '" name="ingredients[]" value="' + value + '"><div class="input-group-append"><button class="btn btn-outline-secondary remove-input" type="button">-</button></div></div>');
+            }
+
+            // Add Ingredient
+            $(document).on('click', '.add-ingredient', function () {
+                var container = $('#ingredients-container');
+                var input = createInput('', 'Ingredient');
+                container.append(input);
+            });
+
+            // Add Step
+            $(document).on('click', '.add-step', function () {
+                var container = $('#steps-container');
+                var input = createInput('', 'Step');
+                container.append(input);
+            });
+
+            // Remove Input
+            $(document).on('click', '.remove-input', function () {
+                $(this).closest('.input-group').remove();
+            });
+        });
+    </script>
+    
+    <form action="{% url 'recipes:update_recipe' recipe.id %}" method="post" class="mx-auto mt-5 p-5 bg-white rounded shadow-sm" style="max-width: 600px;">
+        {% csrf_token %}
+        
+        <h2 class="text-center mb-4" style="font-size: 1.5rem; color: #333;">Update Recipe</h2>
+
+        <div class="form-group">
+            <input type="text" id="title" name="title" class="form-control form-control-lg" placeholder="Title" maxlength="64" value="{{ recipe.title }}">
+        </div>
+
+        <div class="form-group">
+            <textarea id="description" name="description" rows="3" class="form-control" placeholder="Description" style="resize: none;">{{ recipe.description }}</textarea>
+        </div>
+
+        <div class="form-group">
+            <input type="text" id="cuisine" name="cuisine" class="form-control" placeholder="Cuisine" maxlength="64" value="{{ recipe.cuisine }}">
+        </div>
+
+        <div class="form-group">
+            <input type="number" id="time" name="time" class="form-control" placeholder="Total Time Taken" value="{{ recipe.time }}">
+        </div>
+
+        <div id="ingredients-container" class="mb-3">
+            <label style="font-size: 1rem; color: #333;">Ingredients:</label>
+            {% for ingredient in recipe.ingredients %}
+                <div class="input-group mb-2">
+                    <input type="text" name="ingredients[]" class="form-control" placeholder="Ingredient" value="{{ ingredient }}">
+                    <div class="input-group-append">
+                        <button type="button" class="btn btn-outline-secondary remove-input">-</button>
+                    </div>
+                </div>
+            {% endfor %}
+            <button type="button" class="btn btn-outline-primary add-ingredient">Add Ingredient</button>
+        </div>
+
+        <div id="steps-container" class="mb-3">
+            <label style="font-size: 1rem; color: #333;">Steps:</label>
+            {% for step in recipe.steps %}
+                <div class="input-group mb-2">
+                    <input type="text" name="steps[]" class="form-control" placeholder="Step" value="{{ step }}">
+                    <div class="input-group-append">
+                        <button type="button" class="btn btn-outline-secondary remove-input">-</button>
+                    </div>
+                </div>
+            {% endfor %}
+            <button type="button" class="btn btn-outline-primary add-step">Add Step</button>
+        </div>
+
+        <div class="form-group">
+            <input type="number" id="calories" name="calories" class="form-control" placeholder="Calories" value="{{ recipe.calories }}">
+        </div>
+
+        <div class="form-group">
+            <input type="url" id="image" name="image" class="form-control" placeholder="Image URL (optional)" value="{{ recipe.image }}">
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block">Submit</button>
+    </form>
+{% endblock %}

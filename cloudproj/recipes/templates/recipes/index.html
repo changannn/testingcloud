@@ -1,0 +1,838 @@
+{% extends "recipes/layout.html" %}
+
+{% block body %}
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    body {
+        background-color: #f8f8f9;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        color: #333;
+    }
+
+    .container {
+        padding-top: 50px;
+        /* Adding more space at the top */
+    }
+
+    .container h2 {
+        font-weight: 300;
+        margin-bottom: 2rem;
+        color: #000;
+        /* Pure black for header */
+    }
+
+    .card {
+        border: none;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 15px;
+        /* Rounded corners */
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        background: #ffffff;
+        /* Pure white background */
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-img-top {
+        height: 200px;
+        /* Fixed height */
+        object-fit: cover;
+        /* Ensures images cover the area well */
+        border-top-left-radius: 15px;
+        /* Rounded corners on top */
+        border-top-right-radius: 15px;
+    }
+
+    .card-title {
+        font-size: 1.2rem;
+        font-weight: 500;
+        color: #000;
+        /* Pure black for titles */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        /* Ellipsis for longer titles */
+    }
+
+    .card-text {
+        font-size: 0.9rem;
+        color: #4a4a4a;
+        /* Lighter black */
+        line-height: 1.6;
+        height: 3.6em;
+        /* Fixed height */
+        overflow: hidden;
+        /* Hides overflow text */
+        text-overflow: ellipsis;
+    }
+
+    .info-item {
+        margin-right: 10px;
+        font-size: 0.8rem;
+        /* Smaller font size */
+        color: #333;
+        /* Consistent color for info */
+    }
+
+    .info-item:last-child {
+        margin-right: 0;
+    }
+
+    .info-item h6 {
+        font-weight: 600;
+        margin-bottom: 0.3rem;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .info-item {
+            flex: 1;
+            margin-right: 5px;
+        }
+    }
+
+    .arrow-down {
+        display: inline-block;
+        width: 0;
+        height: 0;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 8px solid #000;
+        /* Adjust the color as needed */
+    }
+
+    /* Arrow pointing up */
+    .arrow-up {
+        display: inline-block;
+        width: 0;
+        height: 0;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-bottom: 8px solid #000;
+        /* Adjust the color as needed */
+    }
+
+    .arrow-icon {
+        font-family: "Font Awesome";
+    }
+
+    .card {
+        border: none;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 15px;
+        /* Rounded corners */
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        background: #ffffff;
+        display: inline-block;
+        width: 100%;
+        /* Ensure each card takes up the same width */
+        max-width: 350px;
+        /* Adjust the maximum width as needed */
+        margin-right: 25px;
+        margin-bottom: 50px;
+        < !-- vertical-align: top;
+        -->
+    }
+
+    .row {
+        text-align: center;
+        /* Center-align the cards within the row */
+    }
+
+    #sorting-section {
+        display: flex;
+        align-items: center;
+        /* Vertically center the buttons */
+    }
+
+    .sort-button {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        padding: 5px 10px;
+        cursor: pointer;
+        margin-right: 10px;
+        /* Add some spacing between buttons */
+    }
+
+    .sort-button:hover {
+        background-color: #0056b3;
+    }
+
+    #cuisine-dropdown {
+        display: none;
+        position: absolute;
+        background-color: white;
+        border: 1px solid #ccc;
+        padding: 10px;
+        z-index: 2;
+        margin-left: 390px;
+    }
+
+    #ok-button {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        padding: 5px 10px;
+        margin-top: 10px;
+        cursor: pointer;
+        margin-left: 75px;
+    }
+</style>
+
+<div class="container">
+    {% if messages %}
+    <div class="container">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <h2>Featured Recipes</h2>
+    <div id="sorting-section" style="display: none;">
+        <button id="calories-sort-button" class="sort-button">Sort by Calories <i class="arrow-icon"></i></button>
+        <button id="time-sort-button" class="sort-button">Sort by Time <i class="arrow-icon"></i></button>
+        <button id="likes-sort-button" class="sort-button">Sort by Likes <i class="arrow-icon"></i></button>
+        <button id="filter-cuisine-button">Filter By Cuisine</button>
+        <div id="cuisine-dropdown">
+            <p><strong>Filter By Cuisine:</strong></p>
+            <label for="cuisine-all">
+                <input type="checkbox" id="cuisine-all" class="cuisine-all" value="all" checked> All
+            </label>
+            <label for="cuisine-chinese">
+                <input type="checkbox" id="cuisine-chinese" class="cuisine-checkbox" checked> Chinese
+            </label>
+            <label for="cuisine-western">
+                <input type="checkbox" id="cuisine-western" class="cuisine-checkbox" checked> Western
+            </label>
+            <div>
+                <label for="cuisine-malay">
+                    <input type="checkbox" id="cuisine-malay" class="cuisine-checkbox" checked> Malay
+                </label>
+                <label for="cuisine-indian">
+                    <input type="checkbox" id="cuisine-indian" class="cuisine-checkbox" checked> Indian
+                </label>
+                <label for="cuisine-wassup">
+                    <input type="checkbox" id="cuisine-wassup" class="cuisine-checkbox" checked> wassup
+                </label>
+            </div>
+            <div>
+                <button id="ok-button">OK</button>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        {% for recipe in recipes %}
+        <div class="col-md-4 mb-4">
+            <a href="{% url 'recipes:view_recipe' recipe.id %}" class="text-decoration-none">
+                <div class="card">
+                    <img src="{{ recipe.image }}" class="card-img-top" alt="{{ recipe.title }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ recipe.title }}</h5>
+                        <p class="card-text">{{ recipe.description }}</p>
+                        <div class="d-flex justify-content-start">
+                            <div class="info-item">
+                                <h6>Cuisine</h6>
+                                <p>{{ recipe.cuisine }}</p>
+                            </div>
+                            <div class="info-item">
+                                <h6>Time</h6>
+                                <p>{{ recipe.time }} mins</p>
+                            </div>
+                            <div class="info-item">
+                                <h6>Calories</h6>
+                                <p>{{ recipe.calories }}</p>
+                            </div>
+                            <div class="info-item">
+                                <h6>Likes</h6>
+                                <p>{{ recipe.likes }}</p>
+                            </div>
+                        </div>
+                        {% if request.user.is_authenticated %}
+                        <div>
+                            {% if recipe in favorite_recipes %}
+                            <a href="{% url 'recipes:remove_from_favourites' recipe.id %}">Remove from Favorites</a>
+                            {% else %}
+                            <a href="{% url 'recipes:add_to_favourites' recipe.id %}">Add to Favorites</a>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+
+
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <p>No Recipes Found</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    var allRecipesCopy;
+    $(document).ready(function() {
+         allRecipesCopy = $('.card').clone();
+        // Initialize sorting directions for Calories and Time
+        var caloriesSortingDirection = 'default';
+        var timeSortingDirection = 'default';
+        var likesSortingDirection = 'default';
+
+        // Store the default orders for Calories and Time
+        var defaultCaloriesOrder;
+        var defaultTimeOrder;
+        var defaultLikesOrder;
+
+        // "Sort by Calories" button click event
+        $('#calories-sort-button').click(function() {
+            caloriesSortingDirection = toggleSortingDirection(caloriesSortingDirection);
+            if (timeSortingDirection === 'default') {
+                sortRecipesByCalories(caloriesSortingDirection);
+            }
+            else{
+                if (likesSortingDirection === 'default'){
+                    sortRecipesByTimeAndCalories(timeSortingDirection, caloriesSortingDirection);
+                }
+                else {
+                    sortRecipesByTimeLikesAndCalories(timeSortingDirection, likesSortingDirection, caloriesSortingDirection);
+                }
+            }
+        });
+
+        // "Sort by Time" button click event
+        $('#time-sort-button').click(function() {
+            timeSortingDirection = toggleSortingDirection(timeSortingDirection);
+            if (caloriesSortingDirection === 'default') {
+                sortRecipesByTime(timeSortingDirection);
+            }
+            else{
+                if (likesSortingDirection === 'default') {
+                    sortRecipesByTimeAndCalories(timeSortingDirection, caloriesSortingDirection);
+                }
+                else {
+                    sortRecipesByTimeLikesAndCalories(timeSortingDirection, likesSortingDirection, caloriesSortingDirection);
+                }
+            }
+        });
+
+        // "Sort by Likes" button click event
+        $('#likes-sort-button').click(function() {
+            likesSortingDirection = toggleSortingDirection(likesSortingDirection);
+            if (timeSortingDirection === 'default') {
+                sortRecipesByLikes(likesSortingDirection);
+            }
+            else{
+                if (caloriesSortingDirection === 'default') {
+                    sortRecipesByTimeAndLikes(timeSortingDirection, likesSortingDirection);
+                }
+                else {
+                    sortRecipesByTimeLikesAndCalories(timeSortingDirection, likesSortingDirection, caloriesSortingDirection);
+                }
+            }
+        });
+
+        function toggleSortingDirection(direction) {
+            // Toggle the sorting direction between default, ascending, and descending
+            if (direction === 'default') {
+                return 'asc';
+            } else if (direction === 'asc') {
+                return 'desc';
+            } else {
+                return 'default';
+            }
+        }
+
+        function sortRecipesByLikesAndCalories(likesSortingDirection, caloriesSortingDirection) {
+            var recipes = $('.card');
+
+            recipes.sort(function(a, b) {
+                var likesA = parseInt($(a).find('.info-item:has(h6:contains("Likes")) p').text());
+                var likesB = parseInt($(b).find('.info-item:has(h6:contains("Likes")) p').text());
+                var caloriesA = parseFloat($(a).find('.info-item:has(h6:contains("Calories")) p').text());
+                var caloriesB = parseFloat($(b).find('.info-item:has(h6:contains("Calories")) p').text());
+
+                // Compare likes based on the provided likesSortingDirection
+                if (likesSortingDirection === 'desc') {
+                    if (likesA > likesB) {
+                        return -1;
+                    } else if (likesA < likesB) {
+                        return 1;
+                    }
+                } else if (likesSortingDirection === 'asc') {
+                    if (likesA < likesB) {
+                        return -1;
+                    } else if (likesA > likesB) {
+                        return 1;
+                    }
+                }
+
+                // If likes is equal, compare calories based on the provided caloriesSortingDirection
+                if (caloriesSortingDirection === 'asc') {
+                    return caloriesA - caloriesB;
+                } else if (caloriesSortingDirection === 'desc') {
+                    return caloriesB - caloriesA;
+                }
+            });
+
+            // Reorder the recipe cards
+            $('.row').html(recipes);
+
+            // Update any UI indicators or icons to reflect the new sorting
+            updateArrowIcon(likesSortingDirection, 'likes');
+            updateArrowIcon(caloriesSortingDirection, 'calories');
+        }
+
+        function sortRecipesByTimeLikesAndCalories(timeSortingDirection, likesSortingDirection, caloriesSortingDirection) {
+            var recipes = $('.card');
+
+            recipes.sort(function(a, b) {
+                var timeA = parseTimeToMinutes($(a).find('.info-item:has(h6:contains("Time")) p').text());
+                var timeB = parseTimeToMinutes($(b).find('.info-item:has(h6:contains("Time")) p').text());
+                var likesA = parseInt($(a).find('.info-item:has(h6:contains("Likes")) p').text());
+                var likesB = parseInt($(b).find('.info-item:has(h6:contains("Likes")) p').text());
+                var caloriesA = parseFloat($(a).find('.info-item:has(h6:contains("Calories")) p').text());
+                var caloriesB = parseFloat($(b).find('.info-item:has(h6:contains("Calories")) p').text());
+
+                // Compare time based on the provided timeSortingDirection
+                if (timeSortingDirection === 'desc') {
+                    if (timeA > timeB) {
+                        return -1;
+                    } else if (timeA < timeB) {
+                        return 1;
+                    }
+                } else if (timeSortingDirection === 'asc') {
+                    if (timeA < timeB) {
+                        return -1;
+                    } else if (timeA > timeB) {
+                        return 1;
+                    }
+                }
+
+                // If time is equal, compare likes
+                if (likesSortingDirection === 'desc') {
+                    if (likesA > likesB) {
+                        return -1;
+                    } else if (likesA < likesB) {
+                        return 1;
+                    }
+                } else if (likesSortingDirection === 'asc') {
+                    if (likesA < likesB) {
+                        return -1;
+                    } else if (likesA > likesB) {
+                        return 1;
+                    }
+                }
+
+                // If time and likes are equal, compare calories based on the provided caloriesSortingDirection
+                if (caloriesSortingDirection === 'asc') {
+                    return caloriesA - caloriesB;
+                } else if (caloriesSortingDirection === 'desc') {
+                    return caloriesB - caloriesA;
+                }
+            });
+
+            // Reorder the recipe cards
+            $('.row').html(recipes);
+
+            // Update any UI indicators or icons to reflect the new sorting
+            updateArrowIcon(timeSortingDirection, 'time');
+            updateArrowIcon(likesSortingDirection, 'likes');
+            updateArrowIcon(caloriesSortingDirection, 'calories');
+        }
+
+        function sortRecipesByTimeAndCalories(timeSortingDirection, caloriesSortingDirection) {
+<!--            var recipes = $('.card');-->
+            var filteredRecipes = getFilteredRecipes();
+            filteredRecipes.sort(function(a, b) {
+                var timeA = parseFloat($(a).find('.info-item:has(h6:contains("Time")) p').text());
+                var timeB = parseFloat($(b).find('.info-item:has(h6:contains("Time")) p').text());
+                var caloriesA = parseFloat($(a).find('.info-item:has(h6:contains("Calories")) p').text());
+                var caloriesB = parseFloat($(b).find('.info-item:has(h6:contains("Calories")) p').text());
+
+                // Compare time based on the provided timeSortingDirection
+                if (timeSortingDirection === 'desc') {
+                    if (timeA > timeB) {
+                        return -1;
+                    } else if (timeA < timeB) {
+                        return 1;
+                    }
+                } else if (timeSortingDirection === 'asc') {
+                    if (timeA < timeB) {
+                        return -1;
+                    } else if (timeA > timeB) {
+                        return 1;
+                    }
+                }
+
+                // If time is equal, compare calories based on the provided caloriesSortingDirection
+                if (caloriesSortingDirection === 'asc') {
+                    return caloriesA - caloriesB;
+                } else if (caloriesSortingDirection === 'desc') {
+                    return caloriesB - caloriesA;
+                }
+            });
+
+            // Reorder the filtered recipe cards
+            $('.row').empty().append(filteredRecipes);
+
+            // Update any UI indicators or icons to reflect the new sorting
+            updateArrowIcon(timeSortingDirection, 'time');
+            updateArrowIcon(caloriesSortingDirection, 'calories');
+        }
+
+        function sortRecipesByTimeAndLikes(timeSortingDirection, likesSortingDirection) {
+            var recipes = $('.card');
+
+            recipes.sort(function(a, b) {
+                var timeA = parseFloat($(a).find('.info-item:has(h6:contains("Time")) p').text());
+                var timeB = parseFloat($(b).find('.info-item:has(h6:contains("Time")) p').text());
+                var likesA = parseInt($(a).find('.info-item:has(h6:contains("Likes")) p').text());
+                var likesB = parseInt($(b).find('.info-item:has(h6:contains("Likes")) p').text());
+
+                // Compare time based on the provided timeSortingDirection
+                if (timeSortingDirection === 'desc') {
+                    if (timeA > timeB) {
+                        return -1;
+                    } else if (timeA < timeB) {
+                        return 1;
+                    }
+                } else if (timeSortingDirection === 'asc') {
+                    if (timeA < timeB) {
+                        return -1;
+                    } else if (timeA > timeB) {
+                        return 1;
+                    }
+                }
+
+                // If time is equal, compare calories based on the provided caloriesSortingDirection
+                if (likesSortingDirection === 'asc') {
+                    return likesA - likesB;
+                } else if (likesSortingDirection === 'desc') {
+                    return likesB - likesA;
+                }
+            });
+
+            // Reorder the recipe cards
+            $('.row').html(recipes);
+
+            // Update any UI indicators or icons to reflect the new sorting
+            updateArrowIcon(timeSortingDirection, 'time');
+            updateArrowIcon(likesSortingDirection, 'likes');
+        }
+
+        // Function to sort recipes by Calories
+        function sortRecipesByCalories(sortDirection) {
+            var recipes = $('.card');
+
+            if (sortDirection === 'default') {
+                // Restore the default order
+                $('.row').html(defaultCaloriesOrder);
+            } else {
+                // Save the default order if it's not already saved
+                if (!defaultCaloriesOrder) {
+                    defaultCaloriesOrder = recipes.clone();
+                }
+
+                recipes.sort(function(a, b) {
+                    var caloriesA = parseFloat($(a).find('.info-item:has(h6:contains("Calories")) p').text());
+                    var caloriesB = parseFloat($(b).find('.info-item:has(h6:contains("Calories")) p').text());
+
+                    if (sortDirection === 'desc') {
+                        return caloriesB - caloriesA; // Sort in descending order
+                    } else {
+                        return caloriesA - caloriesB; // Sort in ascending order
+                    }
+                });
+
+                // Reorder the recipe cards
+                $('.row').html(recipes);
+            }
+
+            updateArrowIcon(sortDirection, 'calories');
+        }
+
+        function parseTimeToMinutes(time) {
+            // Regular expressions to match various time formats
+            const hoursRegex = /(\d+)\s*(hr|hour[s]*)\s*(\d*)\s*(min|minute[s]*)/i;
+            const hoursRegex2 = /(\d+)\s*(hr|hour[s]*)/i;
+            const minutesRegex = /(\d+)\s*(min|minute[s]*)/i;
+
+            // Initialize variables for hours and minutes
+            let hours = 0;
+            let minutes = 0;
+
+            // Check for hours and minutes in the time string
+            const hoursMatch = time.match(hoursRegex);
+            if (hoursMatch) {
+                hours = parseInt(hoursMatch[1]);
+                minutes = parseInt(hoursMatch[3]) || 0;
+            } else {
+                const hoursMatch2 = time.match(hoursRegex2);
+                if (hoursMatch2) {
+                    hours = parseInt(hoursMatch2[1]);
+                } else {
+                    const minutesMatch = time.match(minutesRegex);
+                    if (minutesMatch) {
+                        minutes = parseInt(minutesMatch[1]);
+                    }
+                }
+            }
+
+            // Convert to minutes and return the total time in minutes
+            return hours * 60 + minutes;
+        }
+
+
+        // Function to sort recipes by Time
+        function sortRecipesByTime(sortDirection) {
+            var recipes = $('.card');
+
+            if (sortDirection === 'default') {
+                // Restore the default order
+                $('.row').html(defaultTimeOrder);
+            } else {
+                // Save the default order if it's not already saved
+                if (!defaultTimeOrder) {
+                    defaultTimeOrder = recipes.clone();
+                }
+
+                recipes.sort(function(a, b) {
+                    var timeA = parseTimeToMinutes($(a).find('.info-item:has(h6:contains("Time")) p').text());
+                    var timeB = parseTimeToMinutes($(b).find('.info-item:has(h6:contains("Time")) p').text());
+
+                    if (sortDirection === 'desc') {
+                        return timeB - timeA; // Sort in descending order
+                    } else {
+                        return timeA - timeB; // Sort in ascending order
+                    }
+                });
+
+                // Reorder the recipe cards
+                $('.row').html(recipes);
+            }
+
+            updateArrowIcon(sortDirection, 'time');
+        }
+        // Function to sort recipes by Likes
+        function sortRecipesByLikes(sortDirection) {
+            var recipes = $('.card');
+
+            if (sortDirection === 'default') {
+                // Restore the default order
+                $('.row').html(defaultLikesOrder);
+            } else {
+                // Save the default order if it's not already saved
+                if (!defaultLikesOrder) {
+                    defaultLikesOrder = recipes.clone();
+                }
+
+                recipes.sort(function(a, b) {
+                    var likesA = parseInt($(a).find('.info-item:has(h6:contains("Likes")) p').text());
+                    var likesB = parseInt($(b).find('.info-item:has(h6:contains("Likes")) p').text());
+
+                    if (sortDirection === 'desc') {
+                        return likesB - likesA; // Sort in descending order
+                    } else {
+                        return likesA - likesB; // Sort in ascending order
+                    }
+                });
+
+                // Reorder the recipe cards
+                $('.row').html(recipes);
+            }
+
+            updateArrowIcon(sortDirection, 'likes');
+        }
+
+        function updateArrowIcon(direction, buttonName) {
+            if (direction === 'desc') {
+                $('#' + buttonName + '-sort-button i').removeClass('arrow-up').addClass('arrow-down');
+            } else if (direction === 'asc') {
+                $('#' + buttonName + '-sort-button i').removeClass('arrow-down').addClass('arrow-up');
+            } else {
+                // Reset arrow icon to default state
+                $('#' + buttonName + '-sort-button i').removeClass('arrow-up arrow-down');
+            }
+        }
+
+        // Handle the button click to toggle the dropdown
+        $('#filter-cuisine-button').click(function() {
+            $('#cuisine-dropdown').toggle();
+        });
+
+        // Handle the "OK" button click to close the dropdown
+        $('#ok-button').click(function() {
+            $('#cuisine-dropdown').hide();
+        });
+
+        // Handle changes in the cuisine checkboxes
+        $('.cuisine-checkbox').change(function() {
+            // Check if all cuisine checkboxes are checked
+            var allChecked = $('.cuisine-checkbox:checked').length === $('.cuisine-checkbox').length;
+
+            // Update the "All" checkbox based on the result
+            $('.cuisine-all').prop('checked', allChecked);
+
+            // Call your filter function
+            filterRecipesByCuisine();
+        });
+
+        // Handle the "All" checkbox separately
+        $('#cuisine-all').change(function() {
+            if ($(this).prop('checked')) {
+                // If "All" is checked, check all other cuisine checkboxes
+                $('.cuisine-checkbox').prop('checked', true);
+            } else {
+                // If "All" is unchecked, leave other checkboxes as they are
+                $('.cuisine-checkbox').prop('checked', false);
+            }
+            // Call your filter function
+            filterRecipesByCuisine();
+        });
+
+        function sortFilteredRecipes(filteredRecipes, sortingTypes, sortingDirections) {
+            filteredRecipes.sort(function(a, b) {
+                for (var i = 0; i < sortingTypes.length; i++) {
+                    var sortingType = sortingTypes[i];
+                    var sortingDirection = sortingDirections[i];
+                    var aData, bData;
+
+                    // Determine the sorting data based on the sortingType
+                    if (sortingType === 'calories') {
+                        aData = parseFloat($(a).find('.info-item:has(h6:contains("Calories")) p').text());
+                        bData = parseFloat($(b).find('.info-item:has(h6:contains("Calories")) p').text());
+                    } else if (sortingType === 'time') {
+                        aData = parseTimeToMinutes($(a).find('.info-item:has(h6:contains("Time")) p').text());
+                        bData = parseTimeToMinutes($(b).find('.info-item:has(h6:contains("Time")) p').text());
+                    } else if (sortingType === 'likes') {
+                        aData = parseInt($(a).find('.info-item:has(h6:contains("Likes")) p').text());
+                        bData = parseInt($(b).find('.info-item:has(h6:contains("Likes")) p').text());
+                    }
+
+                    // Implement the sorting logic based on sortingDirection
+                    if (sortingDirection === 'desc') {
+                        if (aData > bData) {
+                            return -1;
+                        } else if (aData < bData) {
+                            return 1;
+                        }
+                    } else {
+                        if (aData < bData) {
+                            return -1;
+                        } else if (aData > bData) {
+                            return 1;
+                        }
+                    }
+
+                    // If data is equal, continue to the next sorting criteria
+                }
+
+                return 0; // No difference, keep the order
+            });
+        }
+
+        function filterRecipesByCuisine() {
+            var selectedCuisines = [];
+            $('input[type="checkbox"]').each(function() {
+                if (this.checked) {
+                    selectedCuisines.push(this.id.replace("cuisine-", ""));
+                }
+            });
+
+            // Get all recipe cards
+            var allRecipes = allRecipesCopy.clone();
+
+            // Filter the recipe cards
+            var filteredRecipes = [];
+            allRecipes.each(function() {
+                var recipeCuisine = $(this).find('.info-item:has(h6:contains("Cuisine")) p').text().toLowerCase();
+
+                // Check if the recipe's cuisine matches any selected cuisine
+                for (var i = 0; i < selectedCuisines.length; i++) {
+                    if (recipeCuisine.includes(selectedCuisines[i])) {
+                        filteredRecipes.push($(this));
+                        break;
+                    }
+                }
+            });
+
+            // Sort the filtered recipes based on desired criteria
+            sortFilteredRecipes(filteredRecipes, ['time', 'likes', 'calories'], [timeSortingDirection, likesSortingDirection, caloriesSortingDirection]);
+
+            // Clear the container and append the sorted filtered cards
+            $('.row').empty();
+            $('.row').append(filteredRecipes);
+        }
+
+        function getFilteredRecipes() {
+            var selectedCuisines = [];
+            $('input[type="checkbox"]').each(function() {
+                if (this.checked) {
+                    selectedCuisines.push(this.id.replace("cuisine-", ""));
+                }
+            });
+
+            // Get all recipe cards
+            var allRecipes = allRecipesCopy.clone();
+
+            // Filter the recipe cards
+            var filteredRecipes = [];
+            allRecipes.each(function () {
+                var recipeCuisine = $(this).find('.info-item:has(h6:contains("Cuisine")) p').text().toLowerCase();
+
+                // Check if the recipe's cuisine matches any selected cuisine
+                for (var i = 0; i < selectedCuisines.length; i++) {
+                    if (recipeCuisine.includes(selectedCuisines[i])) {
+                        filteredRecipes.push($(this));
+                        break;
+                    }
+                }
+            });
+
+            return filteredRecipes;
+        }
+
+        // Initially, show all recipe cards
+        $('.card').show();
+
+        // JavaScript to toggle visibility of the "Calories" and "Time" buttons
+        var searchPerformed = {{ search_performed|yesno:"true,false" }};
+        if (searchPerformed) {
+            $('#sorting-section').show();
+        }
+    });
+
+</script>
+</html>
+<script>
+    // Handle alert box close buttons
+    document.addEventListener("DOMContentLoaded", function () {
+        var closeButtons = document.querySelectorAll(".alert .close");
+
+        closeButtons.forEach(function (button) {
+            button.addEventListener("click", function () {
+                var alert = this.closest(".alert");
+                if (alert) {
+                    alert.style.display = "none";
+                }
+            });
+        });
+    });
+</script>
+
+</html>
+{% endblock %}
