@@ -1,0 +1,123 @@
+{% extends "recipes/layout.html" %}
+
+{% block body %}
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    body {
+        background-color: #f8f8f9;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .recipe-details {
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 20px;
+        border: none;
+        background-color: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 15px;
+    }
+
+    .recipe-details img {
+        width: 100%;
+        height: auto;
+        margin-bottom: 20px;
+        border-radius: 15px;
+    }
+
+    .center-content h1 {
+        font-size: 2rem;
+        margin-bottom: 20px;
+        color: #333;
+        font-weight: 600;
+    }
+
+    .recipe-details h3 {
+        color: #333;
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+        font-weight: 500;
+    }
+
+    .recipe-details p, .recipe-details li {
+        color: #4a4a4a;
+        font-size: 1rem;
+        margin-bottom: 10px;
+        line-height: 1.6;
+    }
+
+    .ingredients-list, .steps-list {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .recipe-details a {
+        color: #fff;
+        text-decoration: none;
+    }
+
+    .btn {
+        margin-top: 20px;
+        border-radius: 6px;
+        font-size: 0.9rem;
+    }
+
+    .btn-primary {
+        background-color: #007aff;
+        border: none;
+    }
+
+    .btn-danger {
+        background-color: #ff3b30;
+        border: none;
+    }
+</style>
+
+<div class="container">
+    <div class="recipe-details">
+        <div class="center-content">
+            <h1>{{ recipe.title }}</h1>
+            <img src="{{ recipe.image }}" alt="{{ recipe.title }}">
+        </div>
+
+        <h3>Description</h3>
+        <p>{{ recipe.description }}</p>
+
+        <h3>Cuisine</h3>
+        <p>{{ recipe.cuisine }}</p>
+
+        <h3>Total Time Taken</h3>
+        <p>{{ recipe.time }} mins</p>
+
+        <h3>Ingredients</h3>
+        <ul class="ingredients-list">
+            {% for ingredient in recipe.ingredients %}
+            <li>{{ ingredient }}</li>
+            {% endfor %}
+        </ul>
+
+        <h3>Steps</h3>
+        <ol class="steps-list">
+            {% for step in recipe.steps %}
+            <li>{{ step }}</li>
+            {% endfor %}
+        </ol>
+
+        <h3>Calories</h3>
+        <p>{{ recipe.calories }}</p>
+
+        <h3>By: {{ recipe.owner.username }}</h3>
+
+        {% if user and user == recipe.owner %}
+        <div class="d-flex justify-content-end">
+            <a href="{% url 'recipes:update_recipe' recipe.id %}" class="btn btn-primary">
+                Update Recipe
+            </a>
+            <a href="{% url 'recipes:delete_recipe' recipe.id %}" class="btn btn-danger ml-2">
+                Delete Recipe
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

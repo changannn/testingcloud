@@ -1,0 +1,80 @@
+{% extends "recipes/layout.html" %}
+
+{% block body %}
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            function createInput(value = '', placeholder = '') {
+                return $('<div class="input-group mb-3"><input type="text" class="form-control" placeholder="' + placeholder + '" name="ingredients[]" value="' + value + '"><div class="input-group-append"><button class="btn btn-outline-secondary remove-input" type="button">-</button></div></div>');
+            }
+
+            // Add Ingredient
+            $(document).on('click', '.add-ingredient', function () {
+                var container = $('#ingredients-container');
+                var input = createInput('', 'Ingredient');
+                container.append(input);
+            });
+
+            // Add Step
+            $(document).on('click', '.add-step', function () {
+                var container = $('#steps-container');
+                var input = createInput('', 'Step');
+                container.append(input);
+            });
+
+            // Remove Input
+            $(document).on('click', '.remove-input', function () {
+                $(this).closest('.input-group').remove();
+            });
+        });
+    </script>
+    
+    <form action="{% url 'recipes:create' %}" method="post" class="mx-auto mt-5 p-5 bg-white rounded shadow-sm" style="max-width: 600px;">
+        {% csrf_token %}
+        
+        <h2 class="text-center mb-4" style="font-size: 1.5rem; color: #333;">Create a New Recipe</h2>
+
+        <div class="form-group">
+            <label for="title" style="font-size: 1rem; color: #333;">Title:</label>
+            <input type="text" id="title" name="title" class="form-control" maxlength="64">
+        </div>
+
+        <div class="form-group">
+            <label for="description" style="font-size: 1rem; color: #333;">Description:</label>
+            <textarea id="description" name="description" rows="5" class="form-control" style="resize: none;"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="cuisine" style="font-size: 1rem; color: #333;">Cuisine:</label>
+            <input type="text" id="cuisine" name="cuisine" class="form-control" maxlength="64">
+        </div>
+
+        <div class="form-group">
+            <label for="time" style="font-size: 1rem; color: #333;">Total Time Taken (Mins):</label>
+            <input type="number" id="time" name="time" class="form-control">
+        </div>
+
+        <div id="ingredients-container" class="mb-3">
+            <label style="font-size: 1rem; color: #333;">Ingredients:</label>
+            <button type="button" class="btn btn-outline-primary add-ingredient">Add Ingredient</button>
+        </div>
+
+        <div id="steps-container" class="mb-3">
+            <label style="font-size: 1rem; color: #333;">Steps:</label>
+            <button type="button" class="btn btn-outline-primary add-step">Add Step</button>
+        </div>
+
+        <div class="form-group">
+            <label for="calories" style="font-size: 1rem; color: #333;">Calories:</label>
+            <input type="number" id="calories" name="calories" class="form-control">
+        </div>
+
+        <div class="form-group">
+            <label for="image" style="font-size: 1rem; color: #333;">Image URL (optional):</label>
+            <input type="url" id="image" name="image" class="form-control">
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block">Submit</button>
+    </form>
+{% endblock %}

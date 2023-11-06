@@ -1,0 +1,128 @@
+{% extends "recipes/layout.html" %}
+
+{% block body %}
+<style>
+    body {
+        background-color: #f8f8f9;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        color: #333;
+    }
+
+    .container {
+        padding-top: 50px;
+    }
+
+    .container h2 {
+        font-weight: 300;
+        margin-bottom: 2rem;
+        color: #000;
+    }
+
+    .card {
+        border: none;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 15px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        background: #ffffff;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-img-top {
+        height: 200px;
+        object-fit: cover;
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+    }
+
+    .card-title {
+        font-size: 1.2rem;
+        font-weight: 500;
+        color: #000;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .card-text {
+        font-size: 0.9rem;
+        color: #000; /* Change text color to black */
+        line-height: 1.6;
+        height: 3.6em;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .info-item {
+        margin-right: 10px;
+        font-size: 0.8rem;
+        color: #000; /* Change text color to black */
+    }
+
+    .info-item:last-child {
+        margin-right: 0;
+    }
+
+    .info-item h6 {
+        font-weight: 600;
+        margin-bottom: 0.3rem;
+    }
+
+    /* Style for the "Likes" text */
+    .likes-text {
+        color: red;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .info-item {
+            flex: 1;
+            margin-right: 5px;
+        }
+    }
+</style>
+
+<div class="container">
+    <h2>Popular Recipes</h2>
+    <div class="row">
+        {% for recipe in popular_recipes %}
+            {% if recipe.likes > 0 %}  {# Check if the recipe has likes #}
+                <div class="col-md-4 mb-4">
+                    <a href="{% url 'recipes:view_recipe' recipe.id %}" class="text-decoration-none">
+                        <div class="card">
+                            <img src="{{ recipe.image }}" class="card-img-top" alt="{{ recipe.title }}">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ recipe.title }}</h5>
+                                <p class="card-text">{{ recipe.description }}</p>
+                                <div class="d-flex justify-content-start">
+                                    <div class="info-item">
+                                        <h6>Cuisine</h6>
+                                        <p>{{ recipe.cuisine }}</p>
+                                    </div>
+                                    <div class="info-item">
+                                        <h6>Time</h6>
+                                        <p>{{ recipe.time }} mins</p>
+                                    </div>
+                                    <div class="info-item">
+                                        <h6>Calories</h6>
+                                        <p>{{ recipe.calories }}</p>
+                                    </div>
+                                    <div class="info-item">
+                                        <h6>Likes</h6>
+                                        <p>{{ recipe.likes }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            {% endif %}
+        {% empty %}
+            <p>No popular recipes found.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
