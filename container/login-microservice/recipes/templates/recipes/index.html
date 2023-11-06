@@ -29,6 +29,14 @@
         transition: transform 0.3s ease, box-shadow 0.3s ease;
         background: #ffffff;
         /* Pure white background */
+        display: inline-block;
+        width: 100%;
+        /* Ensure each card takes up the same width */
+        max-width: 350px;
+        /* Adjust the maximum width as needed */
+        margin-right: 25px;
+        margin-bottom: 50px;
+        vertical-align: top;
     }
 
     .card:hover {
@@ -75,11 +83,12 @@
         /* Smaller font size */
         color: #333;
         /* Consistent color for info */
+        text-align: center;
     }
 
-    .info-item:last-child {
+    /* .info-item:last-child {
         margin-right: 0;
-    }
+    } */
 
     .info-item h6 {
         font-weight: 600;
@@ -117,24 +126,6 @@
 
     .arrow-icon {
         font-family: "Font Awesome";
-    }
-
-    .card {
-        border: none;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        border-radius: 15px;
-        /* Rounded corners */
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        background: #ffffff;
-        display: inline-block;
-        width: 100%;
-        /* Ensure each card takes up the same width */
-        max-width: 350px;
-        /* Adjust the maximum width as needed */
-        margin-right: 25px;
-        margin-bottom: 50px;
-        vertical-align: top;
-
     }
 
     .row {
@@ -240,7 +231,7 @@
                     <div class="card-body">
                         <h5 class="card-title">{{ recipe.title }}</h5>
                         <p class="card-text">{{ recipe.description }}</p>
-                        <div class="d-flex justify-content-start">
+                        <div class="d-flex justify-content-center">
                             <div class="info-item">
                                 <h6>Cuisine</h6>
                                 <p>{{ recipe.cuisine }}</p>
@@ -455,7 +446,7 @@
         }
 
         function sortRecipesByTimeAndCalories(timeSortingDirection, caloriesSortingDirection) {
-            var recipes = $('.card');
+<!--            var recipes = $('.card');-->
             var filteredRecipes = getFilteredRecipes();
             filteredRecipes.sort(function(a, b) {
                 var timeA = parseFloat($(a).find('.info-item:has(h6:contains("Time")) p').text());

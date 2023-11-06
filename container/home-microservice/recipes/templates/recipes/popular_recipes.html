@@ -8,6 +8,10 @@
         color: #333;
     }
 
+    .row {
+        text-align: center;
+    }
+
     .container {
         padding-top: 50px;
     }
@@ -24,6 +28,14 @@
         border-radius: 15px;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
         background: #ffffff;
+        display: inline-block;
+        width: 100%;
+        /* Ensure each card takes up the same width */
+        max-width: 350px;
+        /* Adjust the maximum width as needed */
+        margin-right: 25px;
+        margin-bottom: 50px;
+        vertical-align: top;
     }
 
     .card:hover {
@@ -49,31 +61,25 @@
 
     .card-text {
         font-size: 0.9rem;
-        color: #000; /* Change text color to black */
+        color: #4a4a4a;
+        /* Lighter black */
         line-height: 1.6;
         height: 3.6em;
+        /* Fixed height */
         overflow: hidden;
+        /* Hides overflow text */
         text-overflow: ellipsis;
     }
 
     .info-item {
         margin-right: 10px;
         font-size: 0.8rem;
-        color: #000; /* Change text color to black */
-    }
-
-    .info-item:last-child {
-        margin-right: 0;
+        color: #333; /* Change text color to black */
     }
 
     .info-item h6 {
         font-weight: 600;
         margin-bottom: 0.3rem;
-    }
-
-    /* Style for the "Likes" text */
-    .likes-text {
-        color: red;
     }
 
     /* Responsive adjustments */
@@ -97,7 +103,7 @@
                             <div class="card-body">
                                 <h5 class="card-title">{{ recipe.title }}</h5>
                                 <p class="card-text">{{ recipe.description }}</p>
-                                <div class="d-flex justify-content-start">
+                                <div class="d-flex justify-content-center">
                                     <div class="info-item">
                                         <h6>Cuisine</h6>
                                         <p>{{ recipe.cuisine }}</p>

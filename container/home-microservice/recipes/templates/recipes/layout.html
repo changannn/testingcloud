@@ -32,13 +32,8 @@
             margin-left: 20px; /* Adjust spacing between nav items */
         }
 
-        .btn, .form-control {
+        .btn .form-control {
             border-radius: 20px;
-        }
-
-        .btn {
-            background-color: #007bff;
-            color: white;
         }
 
         .form-control {
@@ -69,24 +64,23 @@
                     </li>
                     {% if user.is_authenticated %}
                         <li class="nav-item">
-                            <a class="nav-link" href="http://localhost:8003/create">Create A Recipe</a>
+                            <a class="nav-link" href="{% url 'recipes:create' %}">Create A Recipe</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'recipes:my_favourites' %}">Favourites</a>
-                        </li>               
+                        </li>                        
                         <li class="nav-item">
-                            <a class="nav-link" href="http://localhost:8003/myrecipes">My Recipes</a>
+                            <a class="nav-link" href="{% url 'recipes:my_recipes' %}">My Recipes</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="http://localhost:8000/logout">Log Out</a>
+                            <a class="nav-link" href="{% url 'recipes:logout' %}">Log Out</a>
                         </li>
-
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link" href="http://localhost:8000/login">Log In</a>
+                            <a class="nav-link" href="{% url 'recipes:login' %}">Log In</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="http://localhost:8000/register">Register</a>
+                            <a class="nav-link" href="{% url 'recipes:register' %}">Register</a>
                         </li>
                         <li class="nav-item" style="visibility: hidden;">
                             <a class="nav-link" href="#">Placeholder</a> <!-- Invisible placeholder for alignment -->
@@ -96,12 +90,11 @@
                         </li>
                     {% endif %}
                 </ul>
-                <form class="d-flex" role="search" action="{% url 'recipes:display_search' %}" method="post">
+                <form class="d-flex" role="search" action="{% url 'recipes:search' %}" method="post">
                     {% csrf_token %}
                     <input class="form-control me-2" type="search" placeholder="Search Recipes" aria-label="Search" name="q">
                     <button class="btn btn-outline-success" type="submit">Search</button>
                 </form>
-                
             </div>
         </div>
     </nav>

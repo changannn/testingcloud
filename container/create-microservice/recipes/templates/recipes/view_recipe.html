@@ -9,33 +9,33 @@
     }
 
     .recipe-details {
-        max-width: 800px;
-        margin: 50px auto;
-        padding: 20px;
-        border: none;
+        max-width: 600px; /* Reduced max-width for smaller display */
+        margin: 20px auto; /* Reduced margin */
+        padding: 15px; /* Reduced padding */
         background-color: #fff;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        border-radius: 15px;
+        border-radius: 10px; /* Smaller border radius */
     }
 
     .recipe-details img {
         width: 100%;
+        max-width: 100%; /* Ensure images don't overflow the container */
         height: auto;
-        margin-bottom: 20px;
-        border-radius: 15px;
+        margin-bottom: 15px; /* Reduced margin */
+        border-radius: 10px; /* Smaller border radius */
     }
 
     .center-content h1 {
-        font-size: 2rem;
-        margin-bottom: 20px;
+        text-align: center;
+        font-size: 1.5rem; /* Slightly smaller font size */
+        margin-bottom: 15px; /* Reduced margin */
         color: #333;
         font-weight: 600;
     }
 
     .recipe-details h3 {
         color: #333;
-        font-size: 1.2rem;
-        margin-bottom: 15px;
+        font-size: 1.1rem; /* Slightly smaller font size */
+        margin-bottom: 10px; /* Reduced margin */
         font-weight: 500;
     }
 
@@ -43,34 +43,25 @@
         color: #4a4a4a;
         font-size: 1rem;
         margin-bottom: 10px;
-        line-height: 1.6;
+        line-height: 1.4; /* Slightly reduced line-height */
     }
 
     .ingredients-list, .steps-list {
-        list-style-type: none;
-        padding: 0;
+        list-style-type: disc; /* Use disc bullets for lists */
+        padding-left: 20px; /* Adjust left padding for lists */
     }
 
     .recipe-details a {
-        color: #fff;
+        color: #007bff; /* Use a primary link color */
         text-decoration: none;
     }
 
     .btn {
-        margin-top: 20px;
+        margin: 10px; /* Reduced margin */
         border-radius: 6px;
-        font-size: 0.9rem;
+        font-size: 0.8rem; /* Smaller font size */
     }
 
-    .btn-primary {
-        background-color: #007aff;
-        border: none;
-    }
-
-    .btn-danger {
-        background-color: #ff3b30;
-        border: none;
-    }
 </style>
 
 <div class="container">
@@ -109,11 +100,11 @@
         <h3>By: {{ recipe.owner.username }}</h3>
 
         {% if user and user == recipe.owner %}
-        <div class="d-flex justify-content-end">
-            <a href="{% url 'recipes:update_recipe' recipe.id %}" class="btn btn-primary">
+        <div class="d-flex justify-content-center">
+            <a href="{% url 'recipes:update_recipe' recipe.id %}" class="btn btn-outline-primary">
                 Update Recipe
             </a>
-            <a href="{% url 'recipes:delete_recipe' recipe.id %}" class="btn btn-danger ml-2">
+            <a href="{% url 'recipes:delete_recipe' recipe.id %}" class="btn btn-outline-danger">
                 Delete Recipe
             </a>
         </div>
