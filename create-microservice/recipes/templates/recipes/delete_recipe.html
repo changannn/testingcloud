@@ -1,0 +1,14 @@
+{% extends "recipes/layout.html" %}
+
+{% block body %}
+<div class="container mt-5 text-center">
+    <div class="card mx-auto" style="max-width: 400px; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        <h2 class="mb-4">Delete Recipe</h2>
+        <p class="mb-4">Are you sure you want to delete "{{ recipe.title }}"?</p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Delete</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

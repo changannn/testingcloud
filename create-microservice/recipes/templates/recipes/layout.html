@@ -1,0 +1,109 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{% block title %}Recipes{% endblock %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link href="{% static 'recipes/styles.css' %}" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Helvetica Neue', sans-serif;
+            color: #333;
+            background-color: #fff;
+        }
+
+        .navbar {
+            background-color: #f8f8f8;
+            border-bottom: 1px solid #e7e7e7;
+        }
+
+        .navbar-collapse {
+            flex-grow: 1;
+            justify-content: center;
+        }
+
+        .nav-link, .navbar-brand {
+            color: #333;
+            font-weight: 500;
+        }
+
+        .nav-item + .nav-item {
+            margin-left: 20px; /* Adjust spacing between nav items */
+        }
+
+        .btn, .form-control {
+            border-radius: 20px;
+        }
+
+        .btn {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .form-control {
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        {% if user.is_authenticated %}
+            Signed in as <strong>{{ user.username }}</strong>.
+        {% else %}
+            Not signed in.
+        {% endif %}
+    </div>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="http://localhost:8001/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="http://localhost:8001/popular">Popular</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'recipes:create' %}">Create A Recipe</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="http://localhost:8001/myfavourites">Favourites</a>
+                        </li>                         
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'recipes:my_recipes' %}">My Recipes</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="http://localhost:8000/logout">Log Out</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="http://localhost:8000/login">Log In</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="http://localhost:8000/register">Register</a>
+                        </li>
+                        <li class="nav-item" style="visibility: hidden;">
+                            <a class="nav-link" href="#">Placeholder</a> <!-- Invisible placeholder for alignment -->
+                        </li>
+                        <li class="nav-item" style="visibility: hidden;">
+                            <a class="nav-link" href="#">Placeholder</a> <!-- Invisible placeholder for alignment -->
+                        </li>
+                    {% endif %}
+                </ul>
+                <form class="d-flex" role="search" action="http://search-microservice:8001/search" method="post">
+                    {% csrf_token %}
+                    <input class="form-control me-2" type="search" placeholder="Search Recipes" aria-label="Search" name="q">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+    {% block body %}
+    {% endblock %}
+</body>
+</html>
