@@ -25,7 +25,8 @@ SECRET_KEY = 'django-insecure-1g@m(%l#h#4uao+=_u8a9@(d2pi*b9(6z@zgxn#azml@2kg8uh
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'search-microservice', 'create-microservice']
+ALLOWED_HOSTS = ['login-microservice', 'home-microservice', 'create-microservice', 'search-microservice', 'localhost', '127.0.0.1']
+
 
 
 
