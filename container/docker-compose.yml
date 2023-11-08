@@ -1,87 +1,54 @@
 version: '3.8'
 
 services:
-  db:
-    image: mysql:8.0
-    volumes:
-      - dbdata:/var/lib/mysql #entry point for sql
-      - C:\Users\user\Documents\dumps:/docker-entrypoint-initdb.d #need to put this pwd outputfile.sql
-      
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: cloudproj
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
-    ports:
-      - "3307:3306" #3307 used cayse 3306 is already used on mysql
-
-  login-microservice:  # Previously named 'web'
-    build:
-      context: /Users/changan/Desktop/cloud_project/login-microservice  # Specify the path to the login-microservice folder
-      dockerfile: Dockerfile  # If your Dockerfile is named differently, specify its name here
+  login-microservice:
+    build: ./login-microservice
     command: gunicorn cloudproj.wsgi:application --bind 0.0.0.0:8000
     volumes:
-      - /Users/changan/Desktop/cloud_project/login-microservice:/code  # Adjust the volume mapping accordingly
+      - ./login-microservice:/code
     ports:
       - "8000:8000"
-    depends_on:
-      - db
     environment:
-      DATABASE_HOST: db
+      DATABASE_HOST: cloudproj-db.c0lhyehslrbj.ap-southeast-1.rds.amazonaws.com
       DATABASE_NAME: cloudproj
-      DATABASE_USER: user
-      DATABASE_PASSWORD: password
+      DATABASE_USER: root
+      DATABASE_PASSWORD: root
 
   home-microservice:
-    build:
-      context: /Users/changan/Desktop/cloud_project/home-microservice  # Specify the path to the home-microservice folder
-      dockerfile: Dockerfile  # If your Dockerfile is named differently, specify its name here
+    build: ./home-microservice
     command: gunicorn cloudproj.wsgi:application --bind 0.0.0.0:8001
     volumes:
-      - /Users/changan/Desktop/cloud_project/home-microservice:/home-code  # Adjust the volume mapping accordingly
+      - ./home-microservice:/home-code
     ports:
       - "8001:8001"
-    depends_on:
-      - db
     environment:
-      DATABASE_HOST: db
+      DATABASE_HOST: cloudproj-db.c0lhyehslrbj.ap-southeast-1.rds.amazonaws.com
       DATABASE_NAME: cloudproj
-      DATABASE_USER: user
-      DATABASE_PASSWORD: password
+      DATABASE_USER: root
+      DATABASE_PASSWORD: root
 
   search-microservice:
-    build:
-      context: /Users/changan/Desktop/cloud_project/search-microservice  # Specify the path to the search-microservice folder
-      dockerfile: Dockerfile  # If your Dockerfile is named differently, specify its name here
+    build: ./search-microservice
     command: gunicorn cloudproj.wsgi:application --bind 0.0.0.0:8002
     volumes:
-      - /Users/changan/Desktop/cloud_project/search-microservice:/search-code  # Adjust the volume mapping accordingly
+      - ./search-microservice:/search-code
     ports:
       - "8002:8002"
-    depends_on:
-      - db
     environment:
-      DATABASE_HOST: db
+      DATABASE_HOST: cloudproj-db.c0lhyehslrbj.ap-southeast-1.rds.amazonaws.com
       DATABASE_NAME: cloudproj
-      DATABASE_USER: user
-      DATABASE_PASSWORD: password
+      DATABASE_USER: root
+      DATABASE_PASSWORD: root
 
   create-microservice:
-    build:
-      context: /Users/changan/Desktop/cloud_project/create-microservice  # Specify the path to the search-microservice folder
-      dockerfile: Dockerfile  # If your Dockerfile is named differently, specify its name here
+    build: ./create-microservice
     command: gunicorn cloudproj.wsgi:application --bind 0.0.0.0:8003
     volumes:
-      - /Users/changan/Desktop/cloud_project/create-microservice:/create-code  # Adjust the volume mapping accordingly
+      - ./create-microservice:/create-code
     ports:
       - "8003:8003"
-    depends_on:
-      - db
     environment:
-      DATABASE_HOST: db
+      DATABASE_HOST: cloudproj-db.c0lhyehslrbj.ap-southeast-1.rds.amazonaws.com
       DATABASE_NAME: cloudproj
-      DATABASE_USER: user
-      DATABASE_PASSWORD: password
-
-volumes:
-  dbdata: {}
+      DATABASE_USER: root
+      DATABASE_PASSWORD: root
