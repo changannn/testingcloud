@@ -13,7 +13,11 @@ from .models import User, Recipes, Favourites
 from django.contrib import messages
 
 
-
+def view_recipe(request, recipe_id):
+    recipe = Recipes.objects.get(id=recipe_id)
+    return render(request, "recipes/view_recipe.html", {
+        "recipe": recipe
+    })
 
 @login_required
 def create(request):
@@ -42,7 +46,13 @@ def create(request):
         )
         recipe.save()
 
-        return HttpResponseRedirect(reverse("recipes:index"))
+        user_favorites = Favourites.objects.filter(owner=request.user)
+        favorite_recipes = [fav.title for fav in user_favorites]
+
+        return render(request, "recipes/index.html", {
+            "recipes": Recipes.objects.all(),
+            "favorite_recipes": favorite_recipes,
+        })
     else:
         return render(request, "recipes/create.html")
 
