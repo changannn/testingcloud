@@ -12,7 +12,8 @@ from django.db.models import Count
 from .models import User, Recipes, Favourites
 from django.contrib import messages
 
-
+def index(request):
+    return HttpResponseRedirect(("http://54.169.81.2:8001/"))
 
 def login_view(request):
     if request.method == "POST":
@@ -25,7 +26,7 @@ def login_view(request):
         # Check if authentication successful
         if user is not None:
             login(request, user)
-            return HttpResponseRedirect(("http://localhost:8001/"))
+            return HttpResponseRedirect(("http://54.169.81.2:8001/"))
         else:
             return render(request, "recipes/login.html", {
                 "message": "Invalid username and/or password."
@@ -58,12 +59,12 @@ def register(request):
                 "message": "Username already taken."
             })
         login(request, user)
-        return HttpResponseRedirect(("http://localhost:8001/"))
+        return HttpResponseRedirect(("http://54.169.81.2:8001/"))
     else:
         return render(request, "recipes/register.html")
 
 
 def logout_view(request):
     logout(request)
-    return HttpResponseRedirect(("http://localhost:8001/"))
+    return HttpResponseRedirect(("http://54.169.81.2:8001/"))
 

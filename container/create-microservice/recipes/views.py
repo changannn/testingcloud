@@ -97,13 +97,6 @@ def create(request):
         )
         recipe.save()
 
-        # user_favorites = Favourites.objects.filter(owner=request.user)
-        # favorite_recipes = [fav.title for fav in user_favorites]
-
-        # return render(request, "recipes/index.html", {
-        #     "recipes": Recipes.objects.all(),
-        #     "favorite_recipes": favorite_recipes,
-        # })
         return HttpResponseRedirect(reverse("recipes:index"))
     else:
         return render(request, "recipes/create.html")

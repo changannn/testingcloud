@@ -64,24 +64,24 @@
                     </li>
                     {% if user.is_authenticated %}
                         <li class="nav-item">
-                            <a class="nav-link" href="http://localhost:8003/create">Create A Recipe</a>
+                            <a class="nav-link" href="http://54.169.81.2:8003/create">Create A Recipe</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'recipes:my_favourites' %}">Favourites</a>
                         </li>               
                         <li class="nav-item">
-                            <a class="nav-link" href="http://localhost:8003/myrecipes">My Recipes</a>
+                            <a class="nav-link" href="http://54.169.81.2:8003/myrecipes">My Recipes</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="http://localhost:8000/logout">Log Out</a>
+                            <a class="nav-link" href="http://54.169.81.2:8000/logout">Log Out</a>
                         </li>
 
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link" href="http://localhost:8000/login">Log In</a>
+                            <a class="nav-link" href="http://54.169.81.2:8000/login">Log In</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="http://localhost:8000/register">Register</a>
+                            <a class="nav-link" href="http://54.169.81.2:8000/register">Register</a>
                         </li>
                         <li class="nav-item" style="visibility: hidden;">
                             <a class="nav-link" href="#">Placeholder</a> <!-- Invisible placeholder for alignment -->
