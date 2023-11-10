@@ -25,4 +25,4 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 # Run gunicorn when the container launches
-CMD ["gunicorn", "--bind", "0.0.0.0:8003", "your_application_module:application"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8003", "cloudproj.wsgi:application"]
